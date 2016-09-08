@@ -1,0 +1,12 @@
+language: generic
+sudo: required
+dist: trusty
+
+install:
+    - ./install-ros
+
+script:
+    - source ~/.bashrc
+
+notifications:
+  email: false
