@@ -39,14 +39,14 @@ echo -e "\nInstalling ROS $distro on Ubuntu $release.\n"
 
 # Add ROS, Gazebo and Sixaxis repositories and keys:
 
-echo -n "Adding ROS repository..."
+echo -n "Adding ROS repository...\n"
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros-latest.list'
 wget -nv http://packages.ros.org/ros.key -O - | sudo apt-key add -
 echo -e "...done.\n"
 
 if [ "$RELEASE" != "xenial" ]; then
 
-  echo -n "Adding Gazebo 7 repository..."
+  echo -n "Adding Gazebo 7 repository...\n"
   sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
   wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
   echo -e "...done.\n"
@@ -68,7 +68,7 @@ echo -e "...done.\n"
 
 echo -e "Installing Ubuntu packages...\n"
 sudo apt-get -yqq install openssh-server joystick
-echo -e "...done.\n"
+echo -e "\n...done.\n"
 
 if [ "$RELEASE" == "xenial" ]; then
 
@@ -82,20 +82,20 @@ else
 
   echo -e "Installing Sixaxis package...\n"
   sudo apt-get -yqq install sixad
-  echo -e "...done.\n"
+  echo -e "\n...done.\n"
 
   # Install (most of) ROS Desktop Full (sans tutorials):
 
   echo -e "Installing Gazebo 7 packages...\n"
   sudo apt-get -yqq install ros-"$ROS_DISTRO"-gazebo7-ros-pkgs
   sudo apt-get -yqq install ros-"$ROS_DISTRO"-gazebo7-ros-control
-  echo -e "...done.\n"
+  echo -e "\n...done.\n"
 
   echo -e "Installing ROS packages...\n"
   sudo apt-get -yqq install ros-"$ROS_DISTRO"-perception
   sudo apt-get -yqq install ros-"$ROS_DISTRO"-robot
   sudo apt-get -yqq install ros-"$ROS_DISTRO"-viz
-  echo -e "...done.\n"
+  echo -e "\n...done.\n"
 
 fi
 
@@ -104,7 +104,7 @@ fi
 echo -e "Initializing and updating rosdep...\n"
 sudo rosdep -yq init
 rosdep -yq update # Do not sudo!
-echo -e "...done.\n"
+echo -e "\n...done.\n"
 
 # Automatically source ROS from now on:
 
