@@ -8,9 +8,9 @@ ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
 ppa = ['sixad']
 packages = ubuntu + gazebo + ros + ppa
 
-subprocess.call('sudo echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main" > /etc/apt/sources.list.d/gazebo-stable.list', shell=True)
+subprocess.call("sudo sh -c 'echo \"deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main\" > /etc/apt/sources.list.d/gazebo-stable.list'", shell=True)
 subprocess.call('wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -', shell=True)
-subprocess.call('sudo echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list', shell=True)
+subprocess.call("sudo sh -c 'echo \"deb http://packages.ros.org/ros/ubuntu trusty main\" > /etc/apt/sources.list.d/ros-latest.list'", shell=True)
 subprocess.call('wget -nv http://packages.ros.org/ros.key -O - | sudo apt-key add -', shell=True)
 subprocess.call('sudo apt-add-repository -y ppa:falk-t-j/qtsixa', shell=True)
 
