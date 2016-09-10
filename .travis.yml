@@ -2,12 +2,15 @@ language: generic
 sudo: required
 dist: trusty
 
-install:
-    - ./osu-uwrt install ros
+before_install:
     - ./osu-uwrt install ceres
+    - ./osu-uwrt install ros
+    - source ~/.bashrc
+
+install:
+    - ./osu-uwrt install riptide
 
 script:
-    - ./osu-uwrt install riptide
     - source ~/.bashrc
 
 notifications:
