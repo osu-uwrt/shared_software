@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import argparse
+import os
 import subprocess
 import sys as _sys
 
@@ -15,6 +16,24 @@ gazebo = ['ros-indigo-gazebo7-ros-pkgs', 'ros-indigo-gazebo7-ros-control']
 ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
 ppa = ['sixad']
 packages = ubuntu + gazebo + ros + ppa
+
+def ceres():
+    packs = ['cmake', 'libgoogle-glog-dev', 'libatlas-base-dev', 'libeigen3-dev', 'libsuitesparse-dev']
+    for p in packs:
+        subprocess.call('sudo apt-get install {}'.format(p).split())
+
+    subprocess.call('wget -qO- http://ceres-solver.org/ceres-solver-1.11.0.tar.gz | tar zx', shell=True)
+    os.mkdir('ceres-bin')
+    os.chdir('ceres-bin')
+    subprocess.call('cmake ../ceres-solver-1.11.0'.split())
+    subprocess.call('make -s -j3'.split())
+    # subprocess.call('if [ "$TRAVIS" != true ]; then'.split())
+    # subprocess.call('   make -s test'.split())
+    # subprocess.call('fi'.split())
+    subprocess.call('sudo make -s install'.split())
+    os.chdir('..')
+    subprocess.call('rm -rf ceres-*'.split())
+
 
 def ros():
     subprocess.call("sudo sh -c 'echo \"deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main\" > /etc/apt/sources.list.d/gazebo-stable.list'", shell=True)
@@ -36,6 +55,8 @@ def ros():
 def installer(args, parser):
     if args.software == 'ros':
         ros()
+    elif args.software == 'ceres':
+        ceres()
     elif args.software == 'hal':
         print "Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over."
     else:
