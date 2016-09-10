@@ -2,19 +2,24 @@
 
 import subprocess
 
-subprocess.call('echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros-latest.list'.split())
-subprocess.call('wget -nv http://packages.ros.org/ros.key -O - | sudo apt-key add -'.split())
-subprocess.call('echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'.split())
-subprocess.call('wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -'.split())
-subprocess.call('sudo apt-add-repository ppa:falk-t-j/qtsixa'.split())
+ubuntu = ['git', 'openssh-server', 'joystick']
+gazebo = ['ros-indigo-gazebo7-ros-pkgs', 'ros-indigo-gazebo7-ros-control']
+ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
+ppa = ['sixad']
+packages = ubuntu + gazebo + ros + ppa
+
+subprocess.call('sudo sh -c "echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main" > /etc/apt/sources.list.d/gazebo-stable.list"', shell=True)
+subprocess.call('wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -', shell=True)
+subprocess.call('sudo sh -c "echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list"', shell=True)
+subprocess.call('wget -nv http://packages.ros.org/ros.key -O - | sudo apt-key add -', shell=True)
+subprocess.call('sudo apt-add-repository -y ppa:falk-t-j/qtsixa', shell=True)
+
 subprocess.call('sudo apt-get update'.split())
-subprocess.call('sudo apt-get install openssh-server joystick'.split())
-subprocess.call('sudo apt-get install sixad'.split())
-subprocess.call('sudo apt-get install ros-indigo-gazebo7-ros-pkgs'.split())
-subprocess.call('sudo apt-get install ros-indigo-gazebo7-ros-control'.split())
-subprocess.call('sudo apt-get install ros-indigo-perception'.split())
-subprocess.call('sudo apt-get install ros-indigo-robot'.split())
-subprocess.call('sudo apt-get install ros-indigo-viz'.split())
+
+for package in packages:
+    subprocess.call('sudo apt-get install {}'.format(package).split())
+
 subprocess.call('sudo rosdep init'.split())
 subprocess.call('rosdep update'.split())
-subprocess.call('echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc'.split())
+
+subprocess.call('echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc', shell=True)
