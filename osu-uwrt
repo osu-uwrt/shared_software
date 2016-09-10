@@ -34,6 +34,17 @@ def ceres():
     os.chdir('..')
     subprocess.call('rm -rf ceres-*'.split())
 
+def riptide(args):
+    user = 'osu-uwrt'
+    if args.username:
+        user = args.username
+    workspace = os.environ['HOME'] + '/osu-uwrt/riptide_ws'
+    os.makedirs(workspace)
+    os.chdir(workspace)
+    subprocess.call(('git clone --recursive https://github.com/' + user + '/riptide-ros.git src').split())
+    subprocess.call('rosdep install -yi --rosdistro=indigo --from-paths {}'.format(workspace).split())
+    subprocess.call('cd {} && catkin_make'.format(workspace), shell=True)
+    subprocess.call('echo "source ~/osu-uwrt/riptide_ws/devel/setup.bash" >> ~/.bashrc', shell=True)
 
 def ros():
     subprocess.call("sudo sh -c 'echo \"deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main\" > /etc/apt/sources.list.d/gazebo-stable.list'", shell=True)
@@ -57,6 +68,8 @@ def installer(args, parser):
         ros()
     elif args.software == 'ceres':
         ceres()
+    elif args.software == 'riptide':
+        riptide(args)
     elif args.software == 'hal':
         print "Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over."
     else:
@@ -88,6 +101,7 @@ def main():
 
     install = commands.add_parser('install', help="Installs a collection of software.")
     install.add_argument('software', help="The software to install.")
+    install.add_argument('-u', '--username', help="GitHub username to use for cloning forks.")
     install.set_defaults(func=installer)
 
     hal = commands.add_parser('hal', help="I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.")

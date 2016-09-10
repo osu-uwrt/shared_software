@@ -4,9 +4,10 @@ dist: trusty
 
 install:
     - ./osu-uwrt install ros
+    - ./osu-uwrt install ceres
 
 script:
-    - ./osu-uwrt install ceres
+    - ./osu-uwrt install riptide
     - source ~/.bashrc
 
 notifications:
