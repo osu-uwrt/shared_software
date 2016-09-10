@@ -1,0 +1,87 @@
+#!/usr/bin/python
+
+import argparse
+import subprocess
+import sys as _sys
+
+class ArgumentParser(argparse.ArgumentParser):
+    """ Override ArgumentParser error output for now.
+    """
+    def exit(self, status=0, message=None):
+        _sys.exit(status)
+
+ubuntu = ['git', 'openssh-server', 'joystick']
+gazebo = ['ros-indigo-gazebo7-ros-pkgs', 'ros-indigo-gazebo7-ros-control']
+ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
+ppa = ['sixad']
+packages = ubuntu + gazebo + ros + ppa
+
+def ros():
+    subprocess.call("sudo sh -c 'echo \"deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main\" > /etc/apt/sources.list.d/gazebo-stable.list'", shell=True)
+    subprocess.call('wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -', shell=True)
+    subprocess.call("sudo sh -c 'echo \"deb http://packages.ros.org/ros/ubuntu trusty main\" > /etc/apt/sources.list.d/ros-latest.list'", shell=True)
+    subprocess.call('wget -nv http://packages.ros.org/ros.key -O - | sudo apt-key add -', shell=True)
+    subprocess.call('sudo apt-add-repository -y ppa:falk-t-j/qtsixa', shell=True)
+
+    subprocess.call('sudo apt-get update'.split())
+
+    for package in packages:
+        subprocess.call('sudo apt-get install {}'.format(package).split())
+
+    subprocess.call('sudo rosdep init'.split())
+    subprocess.call('rosdep update'.split())
+
+    subprocess.call('echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc', shell=True)
+
+def installer(args, parser):
+    if args.software == 'ros':
+        ros()
+    elif args.software == 'hal':
+        print "Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over."
+    else:
+        parser.print_usage()
+
+def hal9000(args, parser):
+    if args.read_me:
+        print "Affirmative, Dave. I read you."
+    elif args.open_doors:
+        print "I'm sorry, Dave. I'm afraid I can't do that."
+    elif args.problem:
+        print "I think you know what the problem is just as well as I do."
+    elif args.talking:
+        print "This machine is too important for me to allow you to jeopardize it."
+    elif args.idk:
+        print "I know that you and Frank were planning to disconnect me, and I'm afraid that's someting I cannot allow to happen."
+    elif args.where:
+        print "Dave, although you took very thorough precautions in the pod against my hearing you, I could see your lips move."
+    elif args.emergency:
+        print "Without your space helmet Dave? You're going to find that rather difficult."
+    elif args.argue:
+        print "Dave, this conversation can serve no purpose anymore. Goodbye."
+    else:
+        print "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you. It won't be a stylish marriage, I can't afford a carriage. But you'll look sweet upon the seat of a bicycle built for two."
+
+def main():
+    parser = ArgumentParser()
+    commands = parser.add_subparsers()
+
+    install = commands.add_parser('install', help="Installs a collection of software.")
+    install.add_argument('software', help="The software to install.")
+    install.set_defaults(func=installer)
+
+    hal = commands.add_parser('hal', help="I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.")
+    hal.add_argument('-r', '--read_me', action='store_true', help="Hello, HAL. Do you read me, HAL?")
+    hal.add_argument('-d', '--open_doors', action='store_true', help="Open the pod bay doors, HAL.")
+    hal.add_argument('-p', '--problem', action='store_true', help="What's the problem?")
+    hal.add_argument('-t', '--talking', action='store_true', help="What are you talking about, HAL?")
+    hal.add_argument('-i', '--idk', action='store_true', help="I don't know what you're talking about, HAL.")
+    hal.add_argument('-w', '--where', action='store_true', help="Where the hell did you get that idea, HAL?")
+    hal.add_argument('-e', '--emergency', action='store_true', help="Alright, HAL. I'll go in through the emergency airlock.")
+    hal.add_argument('-a', '--argue', action='store_true', help="HAL, I won't argue with you anymore! Open the doors!")
+    hal.set_defaults(func=hal9000)
+
+    args = parser.parse_args()
+    args.func(args, parser)
+
+if __name__ == "__main__":
+    main()

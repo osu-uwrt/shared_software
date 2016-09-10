@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 
 install:
-    - ./install-ros
+    - ./osu-uwrt install ros
 
 script:
     - source ~/.bashrc
