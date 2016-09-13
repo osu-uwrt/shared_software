@@ -82,6 +82,27 @@ def installer(args, parser):
     else:
         parser.print_usage()
 
+def _ros():
+    subprocess.call('sudo apt-get purge python-rosdep ros-indigo-*'.split())
+    subprocess.call('sudo apt-get purge sixad joystick open-ssh_server'.split())
+    subprocess.call('sudo apt-get autoremove'.split())
+    subprocess.call('sudo rm -f /etc/apt/sources.list.d/ros-latest.list')
+    subprocess.call('sudo apt-key del B01FA116')
+    subprocess.call('sudo rm -f /etc/apt/sources.list.d/gazebo-stable.list')
+    subprocess.call('sudo apt-key del AF249743')
+    subprocess.call('apt-add-repository -y --remove ppa:falk-t-j/qtsixa'.split())
+    subprocess.call('rm -f /etc/apt/sources.list.d/falk-t-j-qtsixa-trusty.list'.split())
+    subprocess.call('apt-key del 736E4F0B'.split())
+    subprocess.call('cp ~/.bashrc ~/.bashrc.bak'.split())
+    subprocess.call('grep -v "source \(/opt/ros/[a-z]\+\|.\+/devel\)/setup.bash" ~/.bashrc.bak > ~/.bashrc', shell=True)
+    subprocess.call('sudo rm -rf /etc/ros'.split())
+
+def uninstaller(args, parser):
+    if args.parser == 'ros':
+        _ros(args)
+    else:
+        parser.print_usage()
+
 def hal9000(args, parser):
     if args.read_me:
         print "Affirmative, Dave. I read you."
@@ -114,6 +135,10 @@ def main():
     install.add_argument('software', help="The software to install.")
     install.add_argument('-u', '--username', help="GitHub username to use for cloning forks.")
     install.set_defaults(func=installer)
+
+    uninstall = commands.add_parser('uninstall', help="Uninstalls a collection of software.")
+    uninstall.add_argument('software', help="The software to uninstall.")
+    uninstall.set_defaults(func=uninstaller)
 
     hal = commands.add_parser('hal', help="I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.")
     hal.add_argument('-r', '--read_me', action='store_true', help="Hello, HAL. Do you read me, HAL?")
