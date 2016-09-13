@@ -14,22 +14,24 @@ _Vehicle Agnostic Packages & Utilities_
     source ~/.bashrc
     osu-uwrt install riptide
     source ~/.bashrc
+    osu-uwrt uninstall ros
 
 ---
 
-`/scripts`  -- Bash scripts that have been incorporated into `osu-uwrt`.
+`/scripts`  -- The original scripts upon which `osu-uwrt` is based.
 
 ---
 
 ### To-do:
-* General additions
-  * Logging
-  * Persistence
+* Logging
+  * Status persistence
+  * Subprocess output
+  * Error descriptions
+* Sphinx
+  * OSX/Windows compatibility
+* Uninstall
+  * Incorporate logged status
 * `configure-udev` --> `osu-uwrt`
   * Add sensors & microcontrollers
 * `install-avr` --> `osu-uwrt`
   * Testing & competition updates
-* `install-sphinx` --> `osu-uwrt`
-  * OSX/Windows compatibility
-* `uninstall-ros` --> `osu-uwrt`
-  * Generalize uninstall process
