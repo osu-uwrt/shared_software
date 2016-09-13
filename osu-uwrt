@@ -11,13 +11,7 @@ class ArgumentParser(argparse.ArgumentParser):
     def exit(self, status=0, message=None):
         _sys.exit(status)
 
-ubuntu = ['git', 'openssh-server', 'joystick']
-gazebo = ['ros-indigo-gazebo7-ros-pkgs', 'ros-indigo-gazebo7-ros-control']
-ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
-ppa = ['sixad']
-packages = ubuntu + gazebo + ros + ppa
-
-def ceres():
+def ceres(args):
     packs = ['cmake', 'libgoogle-glog-dev', 'libatlas-base-dev', 'libeigen3-dev', 'libsuitesparse-dev']
     for p in packs:
         subprocess.call('sudo apt-get install {}'.format(p).split())
@@ -46,7 +40,13 @@ def riptide(args):
     subprocess.call('cd {} && catkin_make'.format(workspace), shell=True)
     subprocess.call('echo "source ~/osu-uwrt/riptide_ws/devel/setup.bash" >> ~/.bashrc', shell=True)
 
-def ros():
+def ros(args):
+    ubuntu = ['git', 'openssh-server', 'joystick']
+    gazebo = ['ros-indigo-gazebo7-ros-pkgs', 'ros-indigo-gazebo7-ros-control']
+    ros = ['ros-indigo-perception', 'ros-indigo-robot', 'ros-indigo-viz']
+    ppa = ['sixad']
+    packages = ubuntu + gazebo + ros + ppa
+
     subprocess.call("sudo sh -c 'echo \"deb http://packages.osrfoundation.org/gazebo/ubuntu-stable trusty main\" > /etc/apt/sources.list.d/gazebo-stable.list'", shell=True)
     subprocess.call('wget -nv http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -', shell=True)
     subprocess.call("sudo sh -c 'echo \"deb http://packages.ros.org/ros/ubuntu trusty main\" > /etc/apt/sources.list.d/ros-latest.list'", shell=True)
@@ -65,9 +65,9 @@ def ros():
 
 def installer(args, parser):
     if args.software == 'ros':
-        ros()
+        ros(args)
     elif args.software == 'ceres':
-        ceres()
+        ceres(args)
     elif args.software == 'riptide':
         riptide(args)
     elif args.software == 'hal':
