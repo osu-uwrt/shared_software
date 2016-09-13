@@ -63,7 +63,7 @@ def ros(args):
     subprocess.call('echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc', shell=True)
 
 def sphinx(args):
-     if not args.travis
+    if not args.travis:
         subprocess.call('sudo pip install sphinx sphinx_rtd_theme'.split())
     else:
         subprocess.call('pip install --user travis-sphinx sphinx_rtd_theme'.split())
