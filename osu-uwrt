@@ -62,6 +62,12 @@ def ros(args):
 
     subprocess.call('echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc', shell=True)
 
+def sphinx(args):
+     if not args.travis
+        subprocess.call('sudo pip install sphinx sphinx_rtd_theme'.split())
+    else:
+        subprocess.call('pip install --user travis-sphinx sphinx_rtd_theme'.split())
+
 def installer(args, parser):
     if args.software == 'ros':
         ros(args)
@@ -69,6 +75,8 @@ def installer(args, parser):
         ceres(args)
     elif args.software == 'riptide':
         riptide(args)
+    elif args.software == 'sphinx':
+        sphinx(args)
     elif args.software == 'hal':
         print "Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over."
     else:
