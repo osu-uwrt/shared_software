@@ -21,9 +21,8 @@ def ceres(args):
     os.chdir('ceres-bin')
     subprocess.call('cmake ../ceres-solver-1.11.0'.split())
     subprocess.call('make -s -j3'.split())
-    # subprocess.call('if [ "$TRAVIS" != true ]; then'.split())
-    # subprocess.call('   make -s test'.split())
-    # subprocess.call('fi'.split())
+    if not args.travis:
+        subprocess.call('make -s test'.split())
     subprocess.call('sudo make -s install'.split())
     os.chdir('..')
     subprocess.call('rm -rf ceres-*'.split())
@@ -100,6 +99,7 @@ def main():
         raise EnvironmentError("Do not use sudo.")
 
     parser = ArgumentParser()
+    parser.add_argument('-t', '--travis', action='store_true', help='run in continuous integration mode')
     commands = parser.add_subparsers()
 
     install = commands.add_parser('install', help="Installs a collection of software.")

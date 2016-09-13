@@ -3,12 +3,12 @@ sudo: required
 dist: trusty
 
 before_install:
-    - ./osu-uwrt install ceres
-    - ./osu-uwrt install ros
+    - ./osu-uwrt -t install ceres
+    - ./osu-uwrt -t install ros
     - source ~/.bashrc
 
 install:
-    - ./osu-uwrt install riptide
+    - ./osu-uwrt -t install riptide
 
 script:
     - source ~/.bashrc
