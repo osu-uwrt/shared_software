@@ -96,6 +96,9 @@ def hal9000(args, parser):
         print "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you. It won't be a stylish marriage, I can't afford a carriage. But you'll look sweet upon the seat of a bicycle built for two."
 
 def main():
+    if os.getuid() == 0:
+        raise EnvironmentError("Do not use sudo.")
+
     parser = ArgumentParser()
     commands = parser.add_subparsers()
 
