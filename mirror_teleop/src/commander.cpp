@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Joy.h"
-#include <riptide_msgs/OdomWithAccel.h>
+#include <mirror_msgs/OdomWithAccel.h>
 #include <tf/transform_datatypes.h>
 
 class Accel
@@ -9,7 +9,7 @@ class Accel
     ros::NodeHandle nh;
     ros::Publisher target_odom;
     ros::Subscriber js;
-    riptide_msgs::OdomWithAccel target;
+    mirror_msgs::OdomWithAccel target;
 
   public:
     Accel();
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 Accel::Accel()
 {
   js = nh.subscribe<sensor_msgs::Joy>("joy", 1, &Accel::joy_callback, this);
-  target_odom = nh.advertise<riptide_msgs::OdomWithAccel>("target/position", 1);
+  target_odom = nh.advertise<mirror_msgs::OdomWithAccel>("target/position", 1);
 
   target.header.frame_id = "";
   target.pose.position.x = 0;

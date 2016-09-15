@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>underwater_ros_teleop</name>
+  <name>mirror_msgs</name>
   <version>0.0.1</version>
-  <description>Teleoperation package for OSU's AUVs.</description>
+  <description>Custom messages for OSU's AUVs.</description>
 
   <maintainer email="cary.42@osu.edu">Conor Cary</maintainer>
 
@@ -15,11 +15,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>joy</build_depend>
-  <build_depend>roslaunch</build_depend>
+  <build_depend>message_generation</build_depend>
 
-  <run_depend>joy</run_depend>
-  <run_depend>roslaunch</run_depend>
+  <run_depend>message_runtime</run_depend>
 
   <export>
   </export>
