@@ -5,6 +5,8 @@ find_package(catkin REQUIRED COMPONENTS roscpp tf imu_3dm_gx4 sensor_msgs)
 
 catkin_package()
 
+roslint_cpp()
+
 include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(imu_state src/imu_state.cpp)
