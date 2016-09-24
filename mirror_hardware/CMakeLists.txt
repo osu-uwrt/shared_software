@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(mirror_hardware)
 
-find_package(catkin REQUIRED COMPONENTS roscpp tf imu_3dm_gx4 sensor_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp roslint tf imu_3dm_gx4 sensor_msgs)
 
 catkin_package()
 
