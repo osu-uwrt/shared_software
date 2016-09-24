@@ -7,7 +7,7 @@ catkin_package()
 
 roslint_cpp()
 
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(accel_cmdr src/accel_cmd.cpp)
 target_link_libraries(accel_cmdr ${catkin_LIBRARIES})

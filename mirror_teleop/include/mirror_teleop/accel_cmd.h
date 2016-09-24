@@ -25,50 +25,25 @@
  *
  *********************************************************************************/
 
-#include "mirror_teleop/commander.h"
+#ifndef ACCEL_CMD_H
+#define ACCEL_CMD_H
 
-Accel::Accel()
+#include "ros/ros.h"
+#include "sensor_msgs/Joy.h"
+#include "geometry_msgs/Accel.h"
+
+class Accel
 {
-  js = nh.subscribe<sensor_msgs::Joy>("joy", 1, &Accel::joy_callback, this);
-  target_odom = nh.advertise<mirror_msgs::OdomWithAccel>("target/position", 1);
+ private:
+  ros::NodeHandle nh;
+  ros::Publisher accels;
+  ros::Subscriber js;
+  geometry_msgs::Accel accel;
 
-  target.header.frame_id = "";
-  target.pose.position.x = 0;
-  target.pose.position.y = 0;
-  target.pose.position.z = 0;
-  target.twist.linear.x = 0;
-  target.twist.linear.y = 0;
-  target.twist.linear.z = 0;
-  target.twist.angular.x = 0;
-  target.twist.angular.y = 0;
-  target.twist.angular.z = 0;
-  target.accel.angular.x = 0;
-  target.accel.angular.y = 0;
-  target.accel.angular.z = 0;
-  target.accel.linear.z = 0;
-}
+ public:
+  Accel();
+  void joy_callback(const sensor_msgs::Joy::ConstPtr& joy);
+  void loop();
+};
 
-void Accel::joy_callback(const sensor_msgs::Joy::ConstPtr& joy)
-{
-  target.accel.linear.x = 0.75 * joy->axes[1];
-  target.accel.linear.y = joy->axes[0];
-  target.pose.position.z += (joy->axes[14] - joy->axes[15]) / 100;
-
-  double roll = 3.14159 / 4 * joy->axes[2] * -1;
-  double pitch = 3.14159 / 4 * joy->axes[3];
-  double yaw = 3.14159 * (joy->axes[13] - joy->axes[12]);
-
-  target.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(roll, pitch, yaw);
-
-  target_odom.publish(target);
-}
-
-void Accel::loop()
-{
-  ros::Rate rate(10);
-  while (ros::ok())
-  {
-    ros::spinOnce();
-    rate.sleep();
-  }
-}
+#endif
