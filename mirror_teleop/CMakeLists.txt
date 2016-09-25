@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(mirror_teleop)
 
-find_package(catkin REQUIRED COMPONENTS tf joy roslaunch mirror_msgs)
+find_package(catkin REQUIRED COMPONENTS tf roslaunch mirror_msgs)
 
 catkin_package()
 

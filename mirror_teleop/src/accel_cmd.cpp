@@ -1,64 +1,55 @@
-#include "ros/ros.h"
-#include "sensor_msgs/Joy.h"
-#include "geometry_msgs/Accel.h"
+#include <ros/ros.h>
+#include <geometry_msgs/Accel.h>
+#include <termios.h>
+#include <signal.h>
+#include <stdio.h>
 
-#undef zero
+#define KEYCODE_W 0x77
+#define KEYCODE_S 0x73
+#define KEYCODE_A 0x61
+#define KEYCODE_D 0x64
+#define KEYCODE_Q 0x71
+#define KEYCODE_R 0x72
 
+int kfd = 0;
+struct termios cooked, raw;
+char c;
+bool updated = false;
+
+// ACCEL CLASS DEFINITIONS
 class Accel
 {
   private:
     ros::NodeHandle nh;
     ros::Publisher accels;
-    ros::Subscriber js;
     geometry_msgs::Accel accel;
+
 
   public:
     Accel();
-    void joy_callback(const sensor_msgs::Joy::ConstPtr& joy);
+    void process_keys();
     void loop();
 };
 
-int main(int argc, char **argv)
-{
-  ros::init(argc, argv, "joy_accel");
-  Accel accel;
-  accel.loop();
-}
-
 Accel::Accel()
 {
-  js = nh.subscribe<sensor_msgs::Joy>("joy", 1, &Accel::joy_callback, this);
   accels = nh.advertise<geometry_msgs::Accel>("command/accel", 1);
 }
 
-void Accel::joy_callback(const sensor_msgs::Joy::ConstPtr& joy)
+/**
+* Sets acceleration based on keyboard input. Play with this method.
+*/
+void Accel::process_keys()
 {
-#ifdef zero
-  accel.linear.x = 0;
-  accel.linear.y = 0;
-  accel.linear.z = 0;
+  // Get keyboard event
+  if (read(kfd, &c, 1) < 0)
+  {
+    perror("read():");
+    exit(-1);
+  }
 
-  accel.angular.x = 0;
-  accel.angular.y = 0;
-  accel.angular.z = 0;
-#else
-  accel.linear.x = 0.75 * joy->axes[1];
-  accel.linear.y = joy->axes[0];
-  accel.linear.z = (joy->axes[14] - joy->axes[15]);
-
-  accel.angular.x = 2.0 * 3.14159 * joy->axes[2] * -1;
-  accel.angular.y = 1.2 * 3.14159 * joy->axes[3];
-  accel.angular.z = 2.0 * 3.14159 * (joy->axes[13] - joy->axes[12]);
-#endif
-  // accel.linear.x = 5 * joy->axes[1];
-  // accel.linear.y = 0;
-  // accel.linear.z = 5 * (joy->axes[14] - joy->axes[15]);
-  //
-  // accel.angular.x = 5 * 2 * 3.14159 * joy->axes[2] * -1;
-  // accel.angular.y = 5 * 2 * 3.14159 * joy->axes[3];
-  // accel.angular.z = 5 * 2 * 3.14159 * (joy->axes[13] - joy->axes[12]);
-
-  accels.publish(accel);
+  // NOT IMPLEMENTED
+  
 }
 
 void Accel::loop()
@@ -66,7 +57,36 @@ void Accel::loop()
   ros::Rate rate(10);
   while(ros::ok())
   {
-    ros::spinOnce();
+    Accel::process_keys();
     rate.sleep();
   }
+}
+// END ACCEL CLASS DEFINITIONS
+
+void quit(int signal)
+{
+  (void)signal;
+  tcsetattr(kfd, TCSANOW, &cooked);
+  ros::shutdown();
+  exit(0);
+}
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "key_accel");
+  Accel accel;
+
+  // Resource management and setting up keyboard input stream
+  signal(SIGINT, quit);
+
+  tcgetattr(kfd, &cooked);
+  memcpy(&raw, &cooked, sizeof(struct termios));
+  raw.c_lflag &=~ (ICANON | ECHO);
+
+  raw.c_cc[VEOL] = 1;
+  raw.c_cc[VEOF] = 2;
+  tcsetattr(kfd, TCSANOW, &raw);
+  ROS_INFO("Begin.");
+  accel.loop();
+  return(0);
 }
