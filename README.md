@@ -1,6 +1,5 @@
-### Underwater ROS
+### Shared Software
 
----
 
 __The Underwater Robotics Team__  
 _Vehicle Agnostic Packages & Utilities_
