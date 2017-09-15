@@ -10,3 +10,5 @@ _Vehicle Agnostic Packages & Utilities_
 - `scripts` -- Common scripts for setting up various peripherals.
 - `imu_state.cpp` -- Node for transforming IMU state messages.
 - `udev` -- Contains UDEV rules for our peripherals.
+
+`shared_utils` -- Common custom utilities for making ROS a little easier to deal with.
