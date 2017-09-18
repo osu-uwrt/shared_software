@@ -12,3 +12,4 @@ _Vehicle Agnostic Packages & Utilities_
 - `udev` -- Contains UDEV rules for our peripherals.
 
 `shared_utils` -- Common custom utilities for making ROS a little easier to deal with.
+- `extract_video.cpp` -- Node to extract an AVI from a series of rosbag image messages.
