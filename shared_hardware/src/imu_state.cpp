@@ -47,14 +47,14 @@ void callback(const sensor_msgs::Imu::ConstPtr& imu, const imu_3dm_gx4::FilterOu
   state.header = imu->header;
 
   tf::Quaternion quaternion;
-  tf::quaternionMsgToTF(filter->orientation, quaternion);
+  tf::quaternionMsgToTF(filter->quaternion, quaternion);
   tf::Matrix3x3 orientation = tf::Matrix3x3(quaternion);
   orientation = rotation * orientation;
   double yaw, pitch, roll;
   orientation.getEulerYPR(yaw, pitch, roll);
   quaternion.setEuler(yaw, pitch, roll);
   tf::quaternionTFToMsg(quaternion, state.orientation);
-  state.orientation_covariance = filter->orientation_covariance;
+  //state.orientation_covariance = filter->orientation_covariance;
 
   tf::Vector3 angular_velocity;
   tf::vector3MsgToTF(imu->angular_velocity, angular_velocity);
