@@ -60,7 +60,7 @@ int main(int argc, char **argv)
   std::string topic = nh.resolveName("image");
   std::string transport;
   double sec_per_frame;
-  local_nh.param("sec_per_frame", sec_per_frame, 0.1);
+  local_nh.param("sec_per_frame", sec_per_frame, 0.033333);
   local_nh.param("image_transport", transport, std::string("raw"));
   ros::V_string myargv;
   ros::removeROSArgs(argc, argv, myargv);
